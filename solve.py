@@ -3,6 +3,7 @@ import pytesseract
 from PIL import Image
 import time
 
+
 # Function to display menu and let the user choose a CAPTCHA file
 def select_captcha(directory):
     files = [f for f in os.listdir(directory) if f.endswith('.png')]
@@ -31,36 +32,36 @@ def select_captcha(directory):
 
 # Function to solve a CAPTCHA using pytesseract and print details
 def solve_captcha(image_path):
-    print(f"Loading CAPTCHA image from: {image_path}")
-    captcha_image = Image.open(image_path)
+    print(f"\n=== Solving CAPTCHA: {image_path} ===\n")
 
-    # Display the CAPTCHA image to the user
+    # Open and display the CAPTCHA image
+    captcha_image = Image.open(image_path)
     captcha_image.show()
 
-    print("Attempting to solve the CAPTCHA...")
-    time.sleep(1)
-
-    # Convert image to grayscale
+    # Convert image to grayscale for better OCR recognition
     print("Converting image to grayscale for better OCR recognition.")
     captcha_image = captcha_image.convert('L')  # Convert to grayscale
     captcha_image.show()
 
-    # Optionally, apply thresholding for better OCR accuracy
+    # Apply thresholding (binarization)
     print("Applying thresholding to binarize the image.")
     captcha_image = captcha_image.point(lambda p: p > 128 and 255)
     captcha_image.show()
 
-    # Run the image through pytesseract to get the CAPTCHA text
+    # Run the image through pytesseract to extract text
     print("Sending image to pytesseract for OCR processing...")
     time.sleep(1)
     captcha_text = pytesseract.image_to_string(captcha_image, config='--psm 6')
 
-    print(f"CAPTCHA Solution Attempt: {captcha_text.strip()}")
+    # Clean the text result
+    captcha_solution = captcha_text.strip()
 
-    return captcha_text.strip()
+    print(f"\nBest guess for the CAPTCHA: '{captcha_solution}'")
+
+    return captcha_solution
 
 
-# Main function to handle menu and solving process
+# Main function to handle menu, solving process, and results display
 def main():
     # Specify the directory where CAPTCHA images are stored
     captcha_dir = 'captcha_tests'
@@ -71,7 +72,12 @@ def main():
     if captcha_file:
         # Solve the CAPTCHA and show process details
         captcha_solution = solve_captcha(captcha_file)
-        print("\nFinal CAPTCHA Solution:", captcha_solution)
+
+        # Display the final result in a formatted output
+        print("\n====================================")
+        print(f"File: {captcha_file}")
+        print(f"Result: {captcha_solution}")
+        print("====================================\n")
     else:
         print("No CAPTCHA selected or found.")
 
