@@ -1,7 +1,6 @@
 # anti_captch
 ef up som comas
 
-Sure! Let’s revise the system with the crowd-sourcing captcha-solving approach and clarify the roles of the two applications: the **Clicker** and the **Anti-Captcha** (AC). Here’s how each component can work and what features and requirements they might need.
 
 ### System Overview
 
