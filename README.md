@@ -97,6 +97,29 @@ ef up som comas
 5. **Monitoring and Analytics:**
    - Monitor system performance, user engagement, and captcha-solving effectiveness to continuously improve the service.
 
-### Conclusion
 
-By revising the system into two distinct applications—Clicker and Anti-Captcha—you create a more structured approach to crowd-sourcing captcha solving while providing users with options that suit their preferences. The Clicker app incentivizes participation through rewards, while the Anti-Captcha app provides a hassle-free experience for users who want to avoid captchas altogether. Each application can be further developed and refined based on user feedback and technological advancements.
+### Table 1: Clicker Application
+
+| Feature/Functionality              | Description                                                                                       | Requirements                                                                                     |
+|------------------------------------|---------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
+| **User Registration**               | Users create accounts to participate in captcha solving.                                         | Secure authentication system, user database, and registration forms.                           |
+| **Captcha Detection & Retrieval**   | Captures and recognizes captchas from the user's screen.                                         | Image recognition module using libraries like OpenCV or TensorFlow.                             |
+| **User Interface**                  | Intuitive UI for displaying captcha images and selection options.                                 | Frontend framework (e.g., React, Vue.js, or Electron).                                        |
+| **Reward System**                   | Tracks solved captchas and rewards users with tokens based on accuracy.                          | Backend integration with the Admin DB for token management and transaction recording.          |
+| **Community Features**              | Leaderboards or achievement systems to encourage user participation.                             | Database to store user statistics and rank data.                                               |
+| **Performance Metrics**             | Displays users' performance, including accuracy rates and completed tasks.                      | Analytics module for tracking user interactions and performance.                                |
+| **Notifications**                   | Alerts users when new challenges are available or tokens are earned.                             | Push notifications system (could use WebSockets or a service like Firebase).                   |
+| **Support System**                  | Provides help for users with issues or questions.                                               | Support ticketing system or chat support interface.                                            |
+
+### Table 2: Anti-Captcha (AC) Application
+
+| Feature/Functionality              | Description                                                                                       | Requirements                                                                                     |
+|------------------------------------|---------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
+| **User Registration**               | Users create accounts and manage subscriptions to avoid captchas.                                | Secure authentication system and subscription management database.                              |
+| **Subscription Management**         | Allows users to select and manage their subscription plans.                                      | Payment processing system (e.g., Stripe, PayPal) for managing billing and renewals.           |
+| **Captcha Bypass Mechanism**       | Submits captchas to the Admin DB for real-time solving, eliminating user interaction.           | API integration with the Admin DB for captcha submission and results retrieval.                 |
+| **User Interface**                  | Simple UI for users to manage subscriptions and view usage statistics.                           | Frontend framework for an intuitive interface (similar to Clicker).                            |
+| **Analytics Dashboard**             | Displays metrics on captcha avoidance and service usage.                                         | Dashboard implementation using data visualization libraries or frameworks.                      |
+| **Support and Feedback System**     | Enables users to provide feedback and receive support for issues.                                | Feedback collection mechanism (surveys, forms) and support ticketing system.                   |
+| **Security Features**               | Ensures user data protection and secure transactions.                                            | Data encryption, secure payment handling, and privacy policy adherence.                        |
+
