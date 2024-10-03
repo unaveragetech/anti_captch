@@ -1,5 +1,5 @@
 import os
-import pytesseract
+import easyocr
 from PIL import Image
 import time
 
@@ -30,7 +30,7 @@ def select_captcha(directory):
         return None
 
 
-# Function to solve a CAPTCHA using pytesseract and print details
+# Function to solve a CAPTCHA using EasyOCR and print details
 def solve_captcha(image_path):
     print(f"\n=== Solving CAPTCHA: {image_path} ===\n")
 
@@ -48,17 +48,26 @@ def solve_captcha(image_path):
     captcha_image = captcha_image.point(lambda p: p > 128 and 255)
     captcha_image.show()
 
-    # Run the image through pytesseract to extract text
-    print("Sending image to pytesseract for OCR processing...")
+    # Save the processed image temporarily for EasyOCR
+    temp_image_path = "temp_captcha.png"
+    captcha_image.save(temp_image_path)
+
+    # Initialize the OCR reader
+    reader = easyocr.Reader(['en'])  # Specify the language
+    print("Sending image to EasyOCR for processing...")
     time.sleep(1)
-    captcha_text = pytesseract.image_to_string(captcha_image, config='--psm 6')
+    result = reader.readtext(temp_image_path)
 
-    # Clean the text result
-    captcha_solution = captcha_text.strip()
+    # Check if the result contains any text
+    if result:
+        # Extract text from the result
+        captcha_text = ''.join([text[1] for text in result]).strip()
+        print(f"\nBest guess for the CAPTCHA: '{captcha_text}'")
+    else:
+        captcha_text = ''
+        print("\nNo text found in the CAPTCHA.")
 
-    print(f"\nBest guess for the CAPTCHA: '{captcha_solution}'")
-
-    return captcha_solution
+    return captcha_text
 
 
 # Main function to handle menu, solving process, and results display

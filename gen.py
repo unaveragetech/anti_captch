@@ -11,7 +11,13 @@ def generate_captcha(width, height, length, output_dir, file_num, style, bg_colo
 
     # Create an image with a customizable background color
     image = Image.new('RGB', (width, height), color=bg_color)
-    font = ImageFont.truetype('arial.ttf', size=font_size)
+
+    # Try loading the Arial font, fall back to default if not available
+    try:
+        font = ImageFont.truetype('arial.ttf', size=font_size)
+    except OSError:
+        print("Warning: 'arial.ttf' not found. Using default PIL font.")
+        font = ImageFont.load_default()
 
     draw = ImageDraw.Draw(image)
 
@@ -69,28 +75,21 @@ def add_random_lines(image):
     return image
 
 
-# Function to count existing CAPTCHA files in the output directory
-def count_existing_captchas(output_dir):
-    if not os.path.exists(output_dir):
-        return 0
-    return len([f for f in os.listdir(output_dir) if f.startswith('captcha_') and f.endswith('.png')])
-
-
 # CLI tool function to create captchas with various styles
 def create_captchas(amount, width, height, length, output_dir, style, bg_color, text_color, font_size, blur_level):
-    # Count existing CAPTCHAs
-    existing_count = count_existing_captchas(output_dir)
-    print(f"Found {existing_count} existing CAPTCHA(s) in '{output_dir}'")
-
     # Create output directory if it doesn't exist
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
+
+    # Count existing captchas in the output directory
+    existing_count = sum(1 for _ in os.listdir(output_dir) if _.endswith('.png'))
+    print(f"Found {existing_count} existing CAPTCHA(s) in '{output_dir}'.")
 
     # Generate the specified number of captchas
     for i in range(amount):
         generate_captcha(width, height, length, output_dir, existing_count + i, style, bg_color, text_color, font_size, blur_level)
 
-    print(f"{amount} new CAPTCHAs saved to {output_dir}")
+    print(f"{amount} captchas saved to {output_dir}")
 
 
 # Function to display a menu for selecting captcha styles
@@ -127,6 +126,8 @@ def main():
     parser.add_argument('--font_size', type=int, default=40, help="Font size of the captcha text")
     parser.add_argument('--blur_level', type=float, default=1, help="Level of Gaussian blur to apply")
 
+    args = parser.parse_args()
+
     # Prompt user for captcha style
     style = select_style()
 
@@ -135,10 +136,8 @@ def main():
         bg_color = tuple(map(int, input("Enter background color as R,G,B (e.g., 255,255,255): ").split(',')))
         text_color = tuple(map(int, input("Enter text color as R,G,B (e.g., 0,0,0): ").split(',')))
     else:
-        bg_color = (255, 255, 255)
-        text_color = (0, 0, 0)
-
-    args = parser.parse_args()
+        bg_color = (255, 255, 255)  # Default white background
+        text_color = (0, 0, 0)  # Default black text
 
     # Call the function to create captchas
     create_captchas(args.amount, args.width, args.height, args.length, args.output, style, bg_color, text_color, args.font_size, args.blur_level)
