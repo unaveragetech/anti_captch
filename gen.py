@@ -69,17 +69,28 @@ def add_random_lines(image):
     return image
 
 
+# Function to count existing CAPTCHA files in the output directory
+def count_existing_captchas(output_dir):
+    if not os.path.exists(output_dir):
+        return 0
+    return len([f for f in os.listdir(output_dir) if f.startswith('captcha_') and f.endswith('.png')])
+
+
 # CLI tool function to create captchas with various styles
 def create_captchas(amount, width, height, length, output_dir, style, bg_color, text_color, font_size, blur_level):
+    # Count existing CAPTCHAs
+    existing_count = count_existing_captchas(output_dir)
+    print(f"Found {existing_count} existing CAPTCHA(s) in '{output_dir}'")
+
     # Create output directory if it doesn't exist
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
     # Generate the specified number of captchas
     for i in range(amount):
-        generate_captcha(width, height, length, output_dir, i, style, bg_color, text_color, font_size, blur_level)
+        generate_captcha(width, height, length, output_dir, existing_count + i, style, bg_color, text_color, font_size, blur_level)
 
-    print(f"{amount} captchas saved to {output_dir}")
+    print(f"{amount} new CAPTCHAs saved to {output_dir}")
 
 
 # Function to display a menu for selecting captcha styles
